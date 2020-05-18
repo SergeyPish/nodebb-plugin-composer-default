@@ -195,7 +195,7 @@ define('composer', [
 			title: data.title || '',
 			body: data.body || '',
 			tags: data.tags || [],
-			modified: ((data.title && data.title.length) || (data.body && data.body.length)) ? true : false,
+			modified: false,
 			isMain: true
 		};
 
@@ -253,7 +253,7 @@ define('composer', [
 				toPid: toPid,
 				title: title,
 				body: translated,
-				modified: ((title && title.length) || (translated && translated.length)) ? true : false,
+				modified: false,
 				isMain: false
 			});
 		});
@@ -606,6 +606,7 @@ define('composer', [
 		var titleEl = postContainer.find('.title');
 		var bodyEl = postContainer.find('textarea');
 		var thumbEl = postContainer.find('input#topic-thumb-url');
+		var anonymouslyEl = postContainer.find('.anonymously');
 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
 
 		titleEl.val(titleEl.val().trim());
@@ -641,6 +642,7 @@ define('composer', [
 			composerData = {
 				handle: handleEl ? handleEl.val() : undefined,
 				title: titleEl.val(),
+				anonymously: anonymouslyEl.is(":checked"),
 				content: bodyEl.val(),
 				thumb: thumbEl.val() || '',
 				cid: categoryList.getSelectedCid(),
@@ -650,6 +652,7 @@ define('composer', [
 			composerData = {
 				tid: postData.tid,
 				handle: handleEl ? handleEl.val() : undefined,
+				anonymously: anonymouslyEl.is(":checked"),
 				content: bodyEl.val(),
 				toPid: postData.toPid
 			};
@@ -659,18 +662,18 @@ define('composer', [
 				handle: handleEl ? handleEl.val() : undefined,
 				content: bodyEl.val(),
 				title: titleEl.val(),
+				anonymously: anonymouslyEl.is(":checked"),
 				thumb: thumbEl.val() || '',
 				tags: tags.getTags(post_uuid)
 			};
 		}
-		var submitHookData = {
+
+		$(window).trigger('action:composer.submit', {
 			composerEl: postContainer,
 			action: action,
 			composerData: composerData,
-			postData: postData,
-			redirect: true,
-		}
-		$(window).trigger('action:composer.submit', submitHookData);
+			postData: postData
+		});
 
 		// Minimize composer (and set textarea as readonly) while submitting
 		var taskbarIconEl = $('#taskbar .composer[data-uuid="' + post_uuid + '"] i');
@@ -682,12 +685,13 @@ define('composer', [
 		socket.emit(action, composerData, function (err, data) {
 			postContainer.find('.composer-submit').removeAttr('disabled');
 			if (err) {
-				// Restore composer on error
-				composer.load(post_uuid);
-				textareaEl.prop('readonly', false);
 				if (err.message === '[[error:email-not-confirmed]]') {
 					return app.showEmailConfirmWarning(err);
 				}
+
+				// Restore composer on error
+				composer.load(post_uuid);
+				textareaEl.prop('readonly', false);
 
 				return app.alertError(err.message);
 			}
@@ -699,16 +703,16 @@ define('composer', [
 				bootbox.alert(data.message);
 			} else {
 				if (action === 'topics.post') {
-					if (submitHookData.redirect) {
-						ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
-					}
+					ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') ? true : false);
 				} else if (action === 'posts.reply') {
 					if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
 						window.history.back();
-					} else if (submitHookData.redirect &&
-						((ajaxify.data.template.name !== 'topic') ||
-						(ajaxify.data.template.topic && parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)))
-					) {
+					} else if (ajaxify.data.template.topic) {
+						if (parseInt(postData.tid, 10) !== parseInt(ajaxify.data.tid, 10)) {
+							ajaxify.go('post/' + data.pid);
+						}
+						// else, we're in the same topic, no nav required
+					} else {
 						ajaxify.go('post/' + data.pid);
 					}
 				} else {
