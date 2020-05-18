@@ -1,11 +1,11 @@
 {
   "name": "nodebb-plugin-composer-default-with-anonym",
-  "version": "6.3.30",
+  "version": "1.0.1",
   "description": "Default composer for NodeBB",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NodeBB/nodebb-plugin-composer-default"
+    "url": "https://github.com/SergeyPish/nodebb-plugin-composer-default"
   },
   "keywords": [
     "nodebb",
@@ -19,7 +19,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NodeBB/nodebb-plugin-composer-default/issues"
+    "url": "https://github.com/SergeyPish/nodebb-plugin-composer-default/issues"
   },
   "readmeFilename": "README.md",
   "nbbpm": {
