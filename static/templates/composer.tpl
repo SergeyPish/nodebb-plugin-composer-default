@@ -42,10 +42,7 @@
 			<div class="pull-right draft-icon hidden-xs hidden-sm"></div>
 
 			<div class="btn-group pull-right action-bar hidden-sm hidden-xs">
-				<div class="custom-control custom-checkbox pull-left" style="padding: 10px;">
-					<input type="checkbox" name="anonym" value="1" class="custom-control-input anonymously" id="anonym-topic">
-					<label class="custom-control-label" for="anonym-topic">Anonymously</label>
-				</div>
+				
 				<button class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</button>
 
 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="6"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
@@ -64,7 +61,7 @@
 						<!-- ENDIF !formatting.mobile -->
 						<!-- ENDIF formatting.spacer -->
 					<!-- END formatting -->
-
+			
 					<!--[if gte IE 9]><!-->
 						<!-- IF privileges.upload:post:image -->
 						<li class="img-upload-btn hide" data-format="picture" tabindex="-1" title="[[modules:composer.upload-picture]]">
@@ -80,6 +77,10 @@
 						</li>
 						<!-- ENDIF privileges.upload:post:file -->
 					<!--<![endif]-->
+						<li style="cursor: default;">
+							<input type="checkbox" name="anonym" value="1" class="custom-control-input anonymously" id="anonym-topic">
+							<label class="custom-control-label" for="anonym-topic" style="cursor: pointer;">Anonymously</label>
+						</li>
 
 					<!-- IF allowTopicsThumbnail -->
 					<li tabindex="-1">
