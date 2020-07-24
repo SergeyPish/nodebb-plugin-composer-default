@@ -52,6 +52,10 @@
 		<div class="category-tag-row">
 			<div class="btn-toolbar formatting-bar">
 				<ul class="formatting-group">
+					<li style="cursor: default;">
+						<input type="checkbox" name="anonym" value="1" class="custom-control-input anonymously" id="anonym-topic">
+						<label class="custom-control-label" for="anonym-topic" style="cursor: pointer;">Anonymously</label>
+					</li>
 					<!-- BEGIN formatting -->
 						<!-- IF formatting.spacer -->
 						<li class="spacer"></li>
@@ -77,10 +81,6 @@
 						</li>
 						<!-- ENDIF privileges.upload:post:file -->
 					<!--<![endif]-->
-						<li style="cursor: default;">
-							<input type="checkbox" name="anonym" value="1" class="custom-control-input anonymously" id="anonym-topic">
-							<label class="custom-control-label" for="anonym-topic" style="cursor: pointer;">Anonymously</label>
-						</li>
 
 					<!-- IF allowTopicsThumbnail -->
 					<li tabindex="-1">
